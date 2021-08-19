@@ -1,9 +1,9 @@
-#include <iostream>
+#include "Vec3f.h"
 #include <fstream>
 #include <sstream>
 
-constexpr int CANVAS_WIDTH = 800;
-constexpr int CANVAS_HEIGHT = 400;
+constexpr int CANVAS_WIDTH = 400;
+constexpr int CANVAS_HEIGHT = 200;
 
 int main()
 {
@@ -16,13 +16,13 @@ int main()
 	{
 		for (int i{} ; i < CANVAS_WIDTH ; i++)
 		{
-			float ir = (float)j / (CANVAS_HEIGHT - 1.0f);
-			float ig = (float)i / (CANVAS_WIDTH - 1.0f);
-			float ib = 0.0f;
+			Vec3f color ((float)j / (CANVAS_HEIGHT - 1.0f) , 
+						 (float)i / (CANVAS_WIDTH - 1.0f) , 
+						 0.0f);
 
-			int r = (int)(255.0f * ir);
-			int g = (int)(255.0f * ig);
-			int b = (int)(255.0f * ib);
+			int r = (int)(255.0f * color.r());
+			int g = (int)(255.0f * color.g());
+			int b = (int)(255.0f * color.b());
 
 			os << r << " " << g << " " << b << "\n";
 		}
