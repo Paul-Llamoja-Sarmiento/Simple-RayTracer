@@ -22,6 +22,7 @@
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Ray.h" />
     <ClInclude Include="Include\Vec3f.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

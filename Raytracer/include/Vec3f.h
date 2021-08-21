@@ -107,4 +107,4 @@ private:
 	float m_x, m_y, m_z;
 };
 
-inline Vec3f unit_vector(Vec3f &vec) { return vec / vec.length(); }
+inline Vec3f unit_vector(Vec3f vec) { return vec / vec.length(); }
