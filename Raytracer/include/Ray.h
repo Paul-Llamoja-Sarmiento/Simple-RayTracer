@@ -3,20 +3,22 @@
 #include "Vec3f.h"
 
 // Modeling a Ray as: p(t) = A + t * B 
-// A: Vec of starting point
-// B: Vec of direction
-class Ray 
+// p: 3D position along a line when the parameter is "t"
+// A: 3D position of the  ray origin
+// B: Vec of direction of the line
+
+class Ray
 {
 public:
 	Ray() {}
-	Ray(const Vec3f &vec1 , const Vec3f &vec2)
-		: A{vec1} , B{unit_vector(vec2)} {}
+	Ray(const Vec3f &origin , const Vec3f &direction)
+		: m_origin{origin} , m_direction{direction} {}
 
-	inline Vec3f origin() const { return A; }
-	inline Vec3f direction() const { return B; }
-	Vec3f point_at_parameter(float t) { return A + t * B; }
+	inline Vec3f origin() const { return m_origin; }
+	inline Vec3f direction() const { return m_direction; }
+	inline Vec3f point_at_parameter(float t) const { return m_origin + t * m_direction; }
 
 private:
-	Vec3f A;
-	Vec3f B;
+	Vec3f m_origin;
+	Vec3f m_direction;
 };
