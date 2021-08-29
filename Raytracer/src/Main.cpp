@@ -12,7 +12,7 @@ void write_color(std::ostringstream &oss , const Vec3f &color)
 		<< static_cast<int>(255.999 * color.z()) << '\n';
 }
 
-bool hit_sphere(const Vec3f &sphereCenter , const float &sphereRadius , const Ray &ray)
+float hit_sphere(const Vec3f &sphereCenter , const float &sphereRadius , const Ray &ray)
 {
 	// Algorithm to process whether a ray hits or not a sphere
 	// Modeling a Ray as: p(t) = A + t * B 
@@ -23,20 +23,29 @@ bool hit_sphere(const Vec3f &sphereCenter , const float &sphereRadius , const Ra
 	float b = 2.0f * dot(ray.direction() , originCenter);
 	float c = dot(originCenter , originCenter) - (sphereRadius * sphereRadius);
 	float discriminant = (b * b) - (4 * a * c);
-	return (discriminant > 0);
+
+	if (discriminant < 0)
+		return -1.0f;
+	else
+		return (-b - std::sqrt(discriminant)) / (2.0f * a);
 }
 
 Vec3f get_color(Ray &ray)
 {
 	// Returns the RGB vector for a given ray: 
-	// Blue if it hits the sphere, red blended background if not
-	if (hit_sphere(Vec3f(0.0f , 0.0f , -1.0f) , 0.5f , ray))
-		return Vec3f(0.0f , 0.0f , 1.0f);
+	// Shaded based on the normal unit-vector if it hits the sphere, blended background if not
+	float t = hit_sphere(Vec3f(0.0f , 0.0f , -1.0f) , 0.5f , ray);
+
+	if (t > 0)
+	{
+		Vec3f normalAtHit = unit_vector(ray.point_at_parameter(t) - Vec3f(0.0f , 0.0f , -1.0f));
+		return 0.5f * Vec3f(normalAtHit.x() + 1.0f , normalAtHit.y() + 1.0f , normalAtHit.z() + 1.0f);
+	}
 	else
 	{
 		Vec3f unitVector = unit_vector(ray.direction());
 		float t = 0.5f * (unitVector.y() + 1.0f);
-		return (1.0f - t) * Vec3f(1.0f , 1.0f , 1.0f) + t * Vec3f(1.0f , 0.0f , 0.0f);
+		return (1.0f - t) * Vec3f(1.0f , 1.0f , 1.0f) + t * Vec3f(0.5f , 0.5f , 0.5f);
 	}
 }
 
