@@ -20,10 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Constants.h" />
     <ClInclude Include="include\Ray.h" />
+    <ClInclude Include="include\Scene.h" />
     <ClInclude Include="Include\Vec3f.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -1,5 +1,11 @@
 #pragma once
 
+#include <limits>
+
+// Number constants
+constexpr float infinity = std::numeric_limits<float>::infinity();
+
+
 // Canvas parameters (image) - Pixels
 constexpr float ASPECT_RATIO = 16.0f / 9.0f;
 constexpr int CANVAS_HEIGHT = 200;
