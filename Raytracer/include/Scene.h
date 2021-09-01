@@ -31,8 +31,10 @@ class Sphere : public SceneObject
 {
 	// Sphere class, concrete class derived from the abstract SceneObject class
 public:
+	Sphere() 
+		: m_center{Vec3f(0.0f , 0.0f , 0.0f)} , m_radius {1.0f} {}
 	Sphere(Vec3f center , float radius)
-		: m_center{center} , m_radius {radius} {}
+		: m_center{center} , m_radius{radius} {}
 
 	virtual bool hit(const Ray &ray , float tMin , float tMax , HitRecord &record) const override;
 
@@ -49,8 +51,8 @@ public:
 	ObjectList() {}
 	ObjectList(std::shared_ptr<SceneObject> object) { add(object); }
 
-	void clear() {m_objects.clear(); }
-	void add(std::shared_ptr<SceneObject> object) { m_objects.push_back(object); }
+	inline void clear() { m_objects.clear(); }
+	inline void add(std::shared_ptr<SceneObject> object) { m_objects.push_back(object); }
 	virtual bool hit(const Ray &ray , float tMin , float tMax , HitRecord &record) const override;
 
 private:

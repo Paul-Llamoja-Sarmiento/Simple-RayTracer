@@ -43,17 +43,17 @@ bool ObjectList::hit(const Ray &ray , float tMin , float tMax , HitRecord &recor
 	// Algorithm to process wether a ray hits or not an array of scene objects (spheres in this case)
 	HitRecord tempRecord;
 	bool hitFlag{false};
-	float closestSoFar {tMax};
+	float closestSoFar{tMax};
 
 	for (const auto &object : m_objects)
 	{
 		if (object->hit(ray , tMin , closestSoFar , tempRecord))
 		{
 			hitFlag = true;
-			closestSoFar =tempRecord.t;
-			record = tempRecord;
+			closestSoFar = tempRecord.t;
 		}
 	}
+	record = tempRecord;
 
 	return hitFlag;
 }
