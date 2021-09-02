@@ -7,36 +7,61 @@
 #include <sstream>
 #include <algorithm>
 
+Vec3f random_in_unit_sphere()
+{
+	// Function that generates a random vector within a unit length sphere tangent to a hit point
+	while (true)
+	{
+		Vec3f p = Vec3f::random(-1.0f , 1.0f);
+		if (p.squared_length() >= 1)
+			continue;
+		return p;
+	}
+}
+
+Vec3f random_unit_vector()
+{
+	return unit_vector(random_in_unit_sphere());
+}
+
 void write_color(std::ostringstream &oss , const Vec3f &color)
 {
-	// Reescale the value acording to the number of samples per pixel and display it
+	// Reescales the value acording to the number of samples per pixel and display it
+	// It also uses a "gamma2" correction
 	float r = color.r();
 	float g = color.g();
 	float b = color.b();
 
 	float scale = 1.0f / SAMPLES;
-	r *= scale;
-	g *= scale;
-	b *= scale;
+	r = std::sqrt(scale * r);
+	g = std::sqrt(scale * g);
+	b = std::sqrt(scale * b);
 
-	// Write the scaled value to [0,255] color component.
+	// Writes the scaled value to [0,255] color component.
 	oss << static_cast<int>(256 * std::clamp(r , 0.0f , 0.999f)) << ' '
 		<< static_cast<int>(256 * std::clamp(g , 0.0f , 0.999f)) << ' '
 		<< static_cast<int>(256 * std::clamp(b , 0.0f , 0.999f)) << '\n';
 }
 
-Vec3f get_color(Ray &ray , const SceneObject &world)
+Vec3f get_color(const Ray &ray , const SceneObject &world , int depth)
 {
-	// Returns the RGB vector for a given ray: 
-	// Shaded based on the normal unit-vector if it hits a sphere, blended background if not
+	// Returns the RGB vector for a given ray 
+	// Shaded based on a matte surface using the "Lambertian distribution" if it hits a sphere, 
+	// blended background if not
 	HitRecord record;
-	if (world.hit(ray , 0.0f , infinity , record))
-		return 0.5f * (record.normal + Vec3f(1.0f , 1.0f , 1.0f));
+
+	if (depth <= 0) // If we've exceeded the ray bounce limit, no more light is gathered
+		return Vec3f(0.0f , 0.0f , 0.0f);
+	else if (world.hit(ray , 0.001f , infinity , record))
+	{
+		Vec3f target = record.point + record.normal + random_unit_vector();
+		return 0.5f * get_color(Ray(record.point , target - record.point) , world , depth - 1);
+	}
 	else
 	{
 		Vec3f unitVector = unit_vector(ray.direction());
 		float t = 0.5f * (unitVector.y() + 1.0f);
-		return (1.0f - t) * Vec3f(1.0f , 1.0f , 1.0f) + t * Vec3f(0.5f , 0.5f , 0.5f);
+		return (1.0f - t) * Vec3f(1.0f , 1.0f , 1.0f) + t * Vec3f(0.5f , 0.7f , 1.0f);
 	}
 }
 
@@ -68,7 +93,7 @@ int main()
 				float u = (i + random_float()) / (CANVAS_WIDTH - 1.0f);
 				float v = (j + random_float()) / (CANVAS_HEIGHT - 1.0f);
 				Ray r = cam.get_ray(u , v);
-				pixelColor += get_color(r , world);
+				pixelColor += get_color(r , world , MAX_DEPTH);
 			}
 			write_color(os , pixelColor);
 		}

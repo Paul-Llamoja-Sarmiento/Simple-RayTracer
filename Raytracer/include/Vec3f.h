@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <iostream>
+#include "Constants.h"
 
 class Vec3f
 {
@@ -25,6 +26,12 @@ public:
 	// Length and squared length from the vector
 	inline float squared_length() { return m_x * m_x + m_y * m_y + m_z * m_z; }
 	inline float length() { return std::sqrt(squared_length()); }
+
+	// Random vector generator
+	inline static Vec3f random(float min , float max)
+	{
+		return Vec3f(random_float(min , max) , random_float(min , max) , random_float(min , max));
+	}
 
 	// Print the vector with a friend function
 	friend inline std::ostream &operator<<(std::ostream &os , const Vec3f &vec)

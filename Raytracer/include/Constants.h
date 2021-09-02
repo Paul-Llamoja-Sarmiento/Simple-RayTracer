@@ -25,3 +25,4 @@ constexpr float ASPECT_RATIO = 16.0f / 9.0f;
 constexpr int CANVAS_HEIGHT = 400;
 constexpr int CANVAS_WIDTH = static_cast<int>(CANVAS_HEIGHT * ASPECT_RATIO);
 constexpr int SAMPLES = 100; // Samples per Pixels for antialiasing
+constexpr int MAX_DEPTH = 50; // Max recursion depth in get_color() function

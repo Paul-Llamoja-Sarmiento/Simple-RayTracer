@@ -31,8 +31,7 @@ class Sphere : public SceneObject
 {
 	// Sphere class, concrete class derived from the abstract SceneObject class
 public:
-	Sphere() 
-		: m_center{Vec3f(0.0f , 0.0f , 0.0f)} , m_radius {1.0f} {}
+	Sphere() {}
 	Sphere(Vec3f center , float radius)
 		: m_center{center} , m_radius{radius} {}
 
