@@ -2,6 +2,7 @@
 
 #include "Vec3f.h"
 #include "Constants.h"
+#include "Ray.h"
 
 class Camera
 {
