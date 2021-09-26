@@ -33,6 +33,7 @@ bool Sphere::hit(const Ray &ray , float tMin , float tMax , HitRecord &record) c
 	record.point = ray.point_at_parameter(record.t);
 	record.normal = (record.point - m_center) / m_radius;
 	record.set_front_face(ray , record.normal);
+	record.matPtr = m_matPtr;
 
 	return true;
 }

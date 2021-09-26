@@ -4,12 +4,15 @@
 #include <memory>
 #include <vector>
 
+class Material;
+
 struct HitRecord
 {
 	// Saves the information when a ray hits an object
 	float t;
 	Vec3f point;
 	Vec3f normal; // We asume normal always points out
+	std::shared_ptr<Material> matPtr; // Pointer to the material
 	bool isRayInFront;
 
 	inline void set_front_face(const Ray &ray , const Vec3f normal)
@@ -32,8 +35,8 @@ class Sphere : public SceneObject
 	// Sphere class, concrete class derived from the abstract SceneObject class
 public:
 	Sphere() {}
-	Sphere(Vec3f center , float radius)
-		: m_center{center} , m_radius{radius} {}
+	Sphere(Vec3f center , float radius , std::shared_ptr<Material> matPtr)
+		: m_center{center} , m_radius{radius} , m_matPtr{matPtr} {}
 
 	virtual bool hit(const Ray &ray , float tMin , float tMax , HitRecord &record) const override;
 
@@ -41,6 +44,7 @@ public:
 private:
 	Vec3f m_center;
 	float m_radius;
+	std::shared_ptr<Material> m_matPtr;
 };
 
 class ObjectList : public SceneObject

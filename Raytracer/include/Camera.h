@@ -26,6 +26,7 @@ public:
 	{
 		return Ray(m_origin , m_lowerLeftCorner + u * m_horizontal + v * m_vertical);
 	}
+
 private:
 	float m_viewportHeight;
 	float m_viewportWidth;

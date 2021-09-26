@@ -33,6 +33,13 @@ public:
 		return Vec3f(random_float(min , max) , random_float(min , max) , random_float(min , max));
 	}
 
+	// Function that returns true if the vector is close to zero in all dimentions
+	inline bool near_zero() const
+	{
+		constexpr auto s = 1e-8;
+		return (std::fabs(m_x) < s) && (std::fabs(m_y) < s) && (std::fabs(m_z) < s);
+	}
+
 	// Print the vector with a friend function
 	friend inline std::ostream &operator<<(std::ostream &os , const Vec3f &vec)
 	{
@@ -119,4 +126,20 @@ private:
 	float m_x , m_y , m_z;
 };
 
+// Function that makes a unit vector using a given vector as reference
 inline Vec3f unit_vector(Vec3f vec) { return vec / vec.length(); }
+
+// Function that generates a unit random vector within a unit length sphere tangent to a hit point
+inline Vec3f random_unit_vector()
+{
+	while (true)
+	{
+		Vec3f p = Vec3f::random(-1.0f , 1.0f);
+		if (p.squared_length() >= 1)
+			continue;
+		return unit_vector(p);
+	}
+}
+
+// Function that returns the direction of a reflected ray using "n" as the normal to the hit point
+inline Vec3f reflect(const Vec3f &v , const Vec3f &n) { return v - 2 * dot(v , n) * n; }

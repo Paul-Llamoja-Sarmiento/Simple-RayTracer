@@ -3,26 +3,11 @@
 #include "Constants.h"
 #include "Scene.h"
 #include "Camera.h"
+#include "Material.h"
 #include <fstream>
 #include <sstream>
 #include <algorithm>
 
-Vec3f random_in_unit_sphere()
-{
-	// Function that generates a random vector within a unit length sphere tangent to a hit point
-	while (true)
-	{
-		Vec3f p = Vec3f::random(-1.0f , 1.0f);
-		if (p.squared_length() >= 1)
-			continue;
-		return p;
-	}
-}
-
-Vec3f random_unit_vector()
-{
-	return unit_vector(random_in_unit_sphere());
-}
 
 void write_color(std::ostringstream &oss , const Vec3f &color)
 {
@@ -48,14 +33,22 @@ Vec3f get_color(const Ray &ray , const SceneObject &world , int depth)
 	// Returns the RGB vector for a given ray 
 	// Shaded based on a matte surface using the "Lambertian distribution" if it hits a sphere, 
 	// blended background if not
-	HitRecord record;
+	HitRecord record = {0.0f ,			// t
+		Vec3f(0.0f , 0.0f , 0.0f) ,	// hit point
+		Vec3f(0.0f , 0.0f , 0.0f) ,	// normal to hit point
+		nullptr ,			// ptr to material
+		false};			// is ray in front of surface?
 
 	if (depth <= 0) // If we've exceeded the ray bounce limit, no more light is gathered
 		return Vec3f(0.0f , 0.0f , 0.0f);
-	else if (world.hit(ray , 0.001f , infinity , record))
+	else if (world.hit(ray , 0.001f , infinity , record)) // tMin=0.001f instead o 0 to get rid of the shadow acne problem
 	{
-		Vec3f target = record.point + record.normal + random_unit_vector();
-		return 0.5f * get_color(Ray(record.point , target - record.point) , world , depth - 1);
+		Ray scatteredRay;
+		Vec3f attenuation;
+		if (record.matPtr->scatter(ray , record , attenuation , scatteredRay))
+			return attenuation * get_color(scatteredRay , world , depth - 1);
+		else
+			return Vec3f(0.0f , 0.0f , 0.0f);
 	}
 	else
 	{
@@ -73,8 +66,17 @@ int main()
 	std::ostringstream os{};
 
 	ObjectList world;
-	world.add(std::make_shared<Sphere>(Vec3f(0.0f , 0.0f , -1.0f) , 0.5f));
-	world.add(std::make_shared<Sphere>(Vec3f(0.0f , -100.5f , -1.0f) , 100.0f));
+
+	auto ground = std::make_shared<Lambertian>(Vec3f(0.8f , 0.8f , 0.0f));
+	auto centerSphere = std::make_shared<Lambertian>(Vec3f(0.2f , 0.2f , 0.2f));
+	auto leftSphere = std::make_shared<Metal>(Vec3f(0.8f , 0.0f , 0.2f) , 0.2f);
+	auto rightSphere = std::make_shared<Metal>(Vec3f(0.0f , 0.8f , 0.2f) , 0.8f);
+
+
+	world.add(std::make_shared<Sphere>(Vec3f(0.0f , -100.5f , -1.0f) , 100.0f , ground));
+	world.add(std::make_shared<Sphere>(Vec3f(0.0f , 0.0f , -1.0f) , 0.5f , centerSphere));
+	world.add(std::make_shared<Sphere>(Vec3f(-1.0f , 0.0f , -1.0f) , 0.5f , leftSphere));
+	world.add(std::make_shared<Sphere>(Vec3f(1.0f , 0.0f , -1.0f) , 0.5f , rightSphere));
 
 	Camera cam;
 

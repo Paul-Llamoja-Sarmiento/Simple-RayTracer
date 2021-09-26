@@ -28,6 +28,7 @@
     <ClInclude Include="include\Ray.h" />
     <ClInclude Include="include\Scene.h" />
     <ClInclude Include="Include\Vec3f.h" />
+    <ClInclude Include="include\Material.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
