@@ -10,9 +10,7 @@ class Material
 	// Abstract class for a generic material. 
 public:
 	Material(const Vec3f &albedo)
-		: m_albedo{albedo}
-	{
-	}
+		: m_albedo{albedo} { }
 
 	virtual bool scatter(const Ray &rayIn ,
 						 const HitRecord &record ,
@@ -29,9 +27,7 @@ class Lambertian : public Material
 	// Class that represents a diffuse material
 public:
 	Lambertian(const Vec3f &albedo)
-		: Material(albedo)
-	{
-	}
+		: Material(albedo) { }
 
 	virtual bool scatter(const Ray &rayIn ,
 						 const HitRecord &record ,
@@ -55,7 +51,7 @@ class Metal : public Material
 	// Class that represents a metal surface
 public:
 	Metal(const Vec3f &albedo , const float &fuzz)
-		: Material(albedo) , m_fuzz{fuzz < 1 ? fuzz : 1} {}
+		: Material(albedo) , m_fuzz{fuzz < 1 ? fuzz : 1} { }
 
 	virtual bool scatter(const Ray &rayIn ,
 						 const HitRecord &record ,

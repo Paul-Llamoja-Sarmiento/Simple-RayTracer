@@ -67,10 +67,10 @@ int main()
 
 	ObjectList world;
 
-	auto ground = std::make_shared<Lambertian>(Vec3f(0.8f , 0.8f , 0.0f));
+	auto ground       = std::make_shared<Lambertian>(Vec3f(0.8f , 0.8f , 0.0f));
 	auto centerSphere = std::make_shared<Lambertian>(Vec3f(0.2f , 0.2f , 0.2f));
-	auto leftSphere = std::make_shared<Metal>(Vec3f(0.8f , 0.0f , 0.2f) , 0.2f);
-	auto rightSphere = std::make_shared<Metal>(Vec3f(0.0f , 0.8f , 0.2f) , 0.8f);
+	auto leftSphere   = std::make_shared<Metal>(Vec3f(0.8f , 0.0f , 0.2f) , 0.2f);
+	auto rightSphere  = std::make_shared<Metal>(Vec3f(0.0f , 0.8f , 0.2f) , 0.8f);
 
 
 	world.add(std::make_shared<Sphere>(Vec3f(0.0f , -100.5f , -1.0f) , 100.0f , ground));
@@ -78,7 +78,7 @@ int main()
 	world.add(std::make_shared<Sphere>(Vec3f(-1.0f , 0.0f , -1.0f) , 0.5f , leftSphere));
 	world.add(std::make_shared<Sphere>(Vec3f(1.0f , 0.0f , -1.0f) , 0.5f , rightSphere));
 
-	Camera cam;
+	Camera cam(Vec3f(-2.0f , 2.0f , 1.0f) , Vec3f(0.0f , 0.0f , -1.0f) , Vec3f(0.0f , 1.0f , 0.0f), 20 , ASPECT_RATIO);
 
 	os << "P3\n" << CANVAS_WIDTH << " " << CANVAS_HEIGHT << "\n255\n";
 

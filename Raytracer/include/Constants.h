@@ -7,6 +7,13 @@
 
 // Number constants
 constexpr float infinity = std::numeric_limits<float>::infinity();
+constexpr float PI = 3.1415926f;
+
+// Degrees to radians function converter
+inline float degrees_to_radians(float degrees)
+{
+	return degrees * PI / 180.0f;
+}
 
 // Random number generator functions
 inline float random_float()
